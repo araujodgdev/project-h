@@ -1,12 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Moon, Sun, Home, Bell, Mail, User, Search, MoreHorizontal, Heart, MessageCircle, Repeat2, Share, Menu } from "lucide-react"
+import { Moon, Sun, Search, MoreHorizontal, Heart, MessageCircle, Repeat2, Share, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Switch } from "@/components/ui/switch"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import NavBar from "@/components/NavBar"
 
 export default function FeedPage() {
   const [isDarkMode, setIsDarkMode] = useState(false)
@@ -16,26 +17,6 @@ export default function FeedPage() {
     document.documentElement.classList.toggle("dark")
   }
 
-  const NavContent = () => (
-    <nav className="space-y-4">
-      <Button variant="ghost" className="w-full justify-start text-gray-800 dark:text-gray-200">
-        <Home className="mr-2 h-4 w-4" />
-        Início
-      </Button>
-      <Button variant="ghost" className="w-full justify-start text-gray-800 dark:text-gray-200">
-        <Bell className="mr-2 h-4 w-4" />
-        Notificações
-      </Button>
-      <Button variant="ghost" className="w-full justify-start text-gray-800 dark:text-gray-200">
-        <Mail className="mr-2 h-4 w-4" />
-        Mensagens
-      </Button>
-      <Button variant="ghost" className="w-full justify-start text-gray-800 dark:text-gray-200">
-        <User className="mr-2 h-4 w-4" />
-        Perfil
-      </Button>
-    </nav>
-  )
 
   return (
     <div className={`min-h-screen bg-gray-100 dark:bg-gray-900 ${isDarkMode ? 'dark' : ''}`}>
@@ -44,7 +25,7 @@ export default function FeedPage() {
         <aside className="w-64 hidden lg:block p-4">
           <div className="fixed">
             <h1 className="text-2xl font-bold text-orange-500 mb-8">Project H</h1>
-            <NavContent />
+            <NavBar />
             <div className="mt-8 flex items-center space-x-2">
               <Sun className="h-5 w-5 text-gray-500 dark:text-gray-400" />
               <Switch
@@ -71,7 +52,7 @@ export default function FeedPage() {
               </SheetTrigger>
               <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                 <h2 className="text-2xl font-bold text-orange-500 mb-8">Project H</h2>
-                <NavContent />
+                <NavBar />
                 <div className="mt-8 flex items-center space-x-2">
                   <Sun className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                   <Switch

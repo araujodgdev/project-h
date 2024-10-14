@@ -1,10 +1,8 @@
-import fastify, { type FastifyReply, type FastifyRequest } from "fastify";
+import fastify from "fastify";
+import Server from "./server";
 
-const app = fastify({logger: true})
+const SERVER_PORT = process.env.SERVER_PORT || 3000;
 
-app.get("/", (request: FastifyRequest, reply: FastifyReply) => {
-    reply.code(200).send({message: "Hello Fastify with Bun!"})
-})
+const server = new Server(fastify(), Number(SERVER_PORT));
 
-app.listen({port: 3000})
-
+server.start()
