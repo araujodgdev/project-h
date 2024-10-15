@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { MailLing } from "./services/mailing";
+import { MailLing } from "./services/Mail.service";
 import { genTemporaryCode } from "./lib/utils";
 
 export default class Server {

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 
-export class MailLing {
+export class MailService {
     private nm: typeof nodemailer;
     private transporter: any;
 
