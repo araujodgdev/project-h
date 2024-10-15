@@ -1,6 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { MailLing } from "./services/Mail.service";
-import { genTemporaryCode } from "./lib/utils";
+// import { MailService } from "./services/Mail.service";
+// import { genTemporaryCode } from "./lib/utils";
+import UserRoute from "./routes/User.route";
 
 export default class Server {
     private app: FastifyInstance
@@ -10,36 +11,38 @@ export default class Server {
         this.app = app;
         this.port = port;
 
-        this.app.post('/login', async (req: FastifyRequest, reply: FastifyReply) => {
-            try {
-                const { email } = req.body as any;
+        // this.app.post('/login', async (req: FastifyRequest, reply: FastifyReply) => {
+        //     try {
+        //         const { email } = req.body as any;
 
-                if (!email) {
-                    return reply.send({
-                        message: 'Email é obrigatório!'
-                    }).code(401)
-                }
+        //         if (!email) {
+        //             return reply.send({
+        //                 message: 'Email é obrigatório!'
+        //             }).code(401)
+        //         }
 
-                const mailling = new MailLing();
-                const randomCode = genTemporaryCode();
-                const mailOptions = {
-                    from: 'araujodgdev@gmail.com',
-                    to: email,
-                    subject: 'Seu código de verificação',
-                    text: `Olá, seu código de verificação é ${randomCode}`
-                }
+        //         const mailling = new MailService();
+        //         const randomCode = genTemporaryCode();
+        //         const mailOptions = {
+        //             from: 'araujodgdev@gmail.com',
+        //             to: email,
+        //             subject: 'Seu código de verificação',
+        //             text: `Olá, seu código de verificação é ${randomCode}`
+        //         }
 
-                const result = await mailling.sendVerificationCode(mailOptions)
+        //         const result = await mailling.sendVerificationCode(mailOptions)
 
-                reply.send({
-                    message: result
-                }).code(200)
-            } catch (error) {
-                reply.send({
-                    error
-                })
-            }
-        })
+        //         reply.send({
+        //             message: result
+        //         }).code(200)
+        //     } catch (error) {
+        //         reply.send({
+        //             error
+        //         })
+        //     }
+        // })
+
+        this.registerRoutes()
     }
 
     public start(): void {
@@ -53,7 +56,9 @@ export default class Server {
         }
     }
 
-    public register(route: any) {
-        this.app.register(route);
+    public registerRoutes() {
+        const userRoutes = new UserRoute();
+        this.app.register(userRoutes.createUser, {prefix: '/api'})
+        this.app.register(userRoutes.getUserById, {prefix: '/api'})
     }
 }

@@ -1,6 +1,6 @@
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { users, type InsertUser, type SelectUser } from "../db/schema";
-import type { IUserService } from "../interfaces/User.interfaces";
+import type { IUserService } from "../interfaces/User.interface";
 import type { ServiceResponse } from "../types/ServiceResponse.type";
 import { eq } from "drizzle-orm";
 
@@ -14,7 +14,7 @@ export class UserService implements IUserService {
         this.usersTable = users
     }
 
-    public async insertUser(data: InsertUser): Promise<ServiceResponse<SelectUser>> {
+    public async insertUser(data: InsertUser): Promise<ServiceResponse<SelectUser | unknown>> {
         try {
             const [ userCreated ] = await this.db.insert(this.usersTable).values(data).returning()
             return {
@@ -22,11 +22,14 @@ export class UserService implements IUserService {
                 message: "CREATED"
             }
         } catch (error) {
-            throw new Error(error as string)
+            return {
+                data: error,
+                message: "INTERNAL_SERVER_ERROR"
+            }
         }
     }
     
-    public async selectUserById(id: SelectUser['id']): Promise<ServiceResponse<SelectUser>> {
+    public async selectUserById(id: SelectUser['id']): Promise<ServiceResponse<SelectUser | unknown>> {
         try {
             const [ user ] = await this.db.select().from(this.usersTable).where(eq(this.usersTable.id, id));
             if (!user) {
@@ -39,7 +42,10 @@ export class UserService implements IUserService {
                 message: "OK"
             }
         } catch (error) {
-            throw new Error(error as string)
+            return {
+                data: error,
+                message: "INTERNAL_SERVER_ERROR"
+            }
         }
     }
 }
