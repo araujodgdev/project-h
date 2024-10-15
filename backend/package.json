@@ -6,14 +6,19 @@
     "dev": "bun --watch ./src/index.ts"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "drizzle-kit": "^0.25.0",
+    "tsx": "^4.19.1"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "@types/nodemailer": "^6.4.16",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.34.1",
     "fastify": "^5.0.0",
-    "nodemailer": "^6.9.15"
+    "nodemailer": "^6.9.15",
+    "postgres": "^3.4.4"
   }
 }
