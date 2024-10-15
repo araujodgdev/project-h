@@ -1,4 +1,4 @@
-import type { IUserService } from "../services/User.service";
+import type { IUserService } from "../interfaces/User.interfaces";
 
 export class UserController {
     private userService: IUserService;
