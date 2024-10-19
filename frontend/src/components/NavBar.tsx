@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 
 export default function NavBar() {
     return (
-        <nav className="space-y-4">
+        <nav className="space-y-4 max-w-36">
             <Button variant="ghost" className="w-full justify-start text-gray-800 dark:text-gray-200">
                 <Home className="mr-2 h-4 w-4" />
                 Início
