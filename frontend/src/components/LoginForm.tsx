@@ -4,10 +4,13 @@ import { Sun, Moon, AtSign, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import React, { Dispatch, SetStateAction } from "react";
+import { useThemeStore } from "@/store/useThemeStore";
 
-export default function LoginForm({ isDarkMode, toggleDarkMode, step, handleSubmitEmail, handleSubmitCode, setStep }: {
-    isDarkMode: boolean, toggleDarkMode: () => void, step: string, handleSubmitEmail: (e: React.FormEvent) => void, handleSubmitCode: (e: React.FormEvent) => void, setStep: Dispatch<SetStateAction<string>>
+export default function LoginForm({ step, handleSubmitEmail, handleSubmitCode, setStep }: {
+    step: string, handleSubmitEmail: (e: React.FormEvent) => void, handleSubmitCode: (e: React.FormEvent) => void, setStep: Dispatch<SetStateAction<string>>
 }) {
+    const isDarkMode = useThemeStore(state => state.isDarkMode);
+    const toggleDarkMode = useThemeStore(state => state.toggleDarkMode);
     return (
         <div className="lg:flex-1 bg-white dark:bg-gray-900 p-8 lg:p-12 flex items-center justify-center">
             <div className="w-full max-w-md space-y-8">
