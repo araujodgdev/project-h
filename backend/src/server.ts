@@ -1,16 +1,22 @@
 import type { FastifyInstance } from "fastify";
 import UserRoute from "./routes/User.route";
 import AuthRoute from "./routes/Auth.route";
+import type fastifyCors from "@fastify/cors";
+import cors from '@fastify/cors'    
 
 export default class Server {
     private app: FastifyInstance
     private port: number
+    private cors: typeof fastifyCors;
 
     public constructor(app: FastifyInstance, port: number) {
         this.app = app;
         this.port = port;
+        this.cors = cors;
 
-        
+        this.app.register(this.cors, {
+            
+        });
         this.registerUserRoutes()
         this.registerAuthRoutes()
     }
