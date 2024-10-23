@@ -19,10 +19,10 @@ export class MailService {
     public async sendVerificationCode(mailOptions: {from: string, to: string, subject: string, text: string}): Promise<string> {
         try {
             await this.transporter.sendMail(mailOptions);
-            return 'E-mail enviado com sucesso!'
+            return 'OK'
         } catch (error) {
             console.log(error)
-            return 'Algo de errado aconteceu!'
+            return 'ERROR'
         }
     }
     

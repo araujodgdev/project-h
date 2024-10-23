@@ -1,48 +1,24 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { MailService } from "./services/Mail.service";
-import { genTemporaryCode } from "./lib/utils";
+import type { FastifyInstance } from "fastify";
 import UserRoute from "./routes/User.route";
+import AuthRoute from "./routes/Auth.route";
+import type fastifyCors from "@fastify/cors";
+import cors from '@fastify/cors'    
 
 export default class Server {
     private app: FastifyInstance
     private port: number
+    private cors: typeof fastifyCors;
 
     public constructor(app: FastifyInstance, port: number) {
         this.app = app;
         this.port = port;
+        this.cors = cors;
 
-        this.app.post('/login', async (req: FastifyRequest, reply: FastifyReply) => {
-            try {
-                const { email } = req.body as any;
-
-                if (!email) {
-                    return reply.send({
-                        message: 'Email é obrigatório!'
-                    }).code(401)
-                }
-
-                const mailling = new MailService();
-                const randomCode = genTemporaryCode();
-                const mailOptions = {
-                    from: 'araujodgdev@gmail.com',
-                    to: email,
-                    subject: 'Seu código de verificação',
-                    text: `Olá, seu código de verificação é ${randomCode}`
-                }
-
-                const result = await mailling.sendVerificationCode(mailOptions)
-
-                reply.send({
-                    message: result
-                }).code(200)
-            } catch (error) {
-                reply.send({
-                    error
-                })
-            }
-        })
-
-        this.registerRoutes()
+        this.app.register(this.cors, {
+            
+        });
+        this.registerUserRoutes()
+        this.registerAuthRoutes()
     }
 
     public start(): void {
@@ -56,9 +32,17 @@ export default class Server {
         }
     }
 
-    public registerRoutes() {
+    public registerUserRoutes() {
         const userRoutes = new UserRoute();
         this.app.register(userRoutes.createUser, {prefix: '/api'})
         this.app.register(userRoutes.getUserById, {prefix: '/api'})
+        this.app.register(userRoutes.getUserByEmail, {prefix: '/api'})
+    }
+
+    public registerAuthRoutes() {
+        const authRoutes = new AuthRoute();
+        this.app.register(authRoutes.requestCode, {prefix: '/api'})
+        this.app.register(authRoutes.verifyCode, {prefix: '/api'})
+
     }
 }

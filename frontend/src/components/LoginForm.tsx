@@ -1,16 +1,41 @@
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
-import { Sun, Moon, AtSign, ArrowRight } from "lucide-react";
+import { Sun, Moon, AtSign, ArrowRight, Ellipsis } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import React, { Dispatch, SetStateAction } from "react";
 import { useThemeStore } from "@/store/useThemeStore";
+import { useFormStatus } from "react-dom";
+import Form from 'next/form'
+
+const SendCodeBtn = () => {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" className="w-full bg-orange-500 aria-disabled:bg-gray-600 hover:bg-orange-600 text-white flex items-center justify-center" aria-disabled={pending} disabled={pending}>
+            {pending ? 'Enviando' : 'Enviar'}
+            {pending ? <Ellipsis className="ml-2 h-5 w-5" /> : <ArrowRight className="ml-2 h-5 w-5" />}
+        </Button>
+    )
+}
+
+const LoginBtn = () => {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" className="w-full bg-orange-500 aria-disabled:bg-gray-600 hover:bg-orange-600 text-white flex items-center justify-center" aria-disabled={pending} disabled={pending}>
+            {pending ? 'Entrando' : 'Entrar'}
+            {pending ? <Ellipsis className="ml-2 h-5 w-5" /> : <ArrowRight className="ml-2 h-5 w-5" />}
+        </Button>
+    )
+}
+
+
 
 export default function LoginForm({ step, handleSubmitEmail, handleSubmitCode, setStep }: {
-    step: string, handleSubmitEmail: (e: React.FormEvent) => void, handleSubmitCode: (e: React.FormEvent) => void, setStep: Dispatch<SetStateAction<string>>
+    step: string, handleSubmitEmail: (formData: FormData) => void | Promise<void>, handleSubmitCode: (formData: FormData) => void | Promise<void>, setStep: Dispatch<SetStateAction<string>>
 }) {
     const isDarkMode = useThemeStore(state => state.isDarkMode);
     const toggleDarkMode = useThemeStore(state => state.toggleDarkMode);
+
     return (
         <div className="lg:flex-1 bg-white dark:bg-gray-900 p-8 lg:p-12 flex items-center justify-center">
             <div className="w-full max-w-md space-y-8">
@@ -28,7 +53,7 @@ export default function LoginForm({ step, handleSubmitEmail, handleSubmitCode, s
                 </div>
 
                 {step === 'email' ? (
-                    <form onSubmit={handleSubmitEmail} className="space-y-6">
+                    <Form action={handleSubmitEmail} className="space-y-6">
                         <div className="space-y-2">
                             <Label htmlFor="email" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                 E-mail Institucional
@@ -38,6 +63,7 @@ export default function LoginForm({ step, handleSubmitEmail, handleSubmitCode, s
                                 <Input
                                     id="email"
                                     type="email"
+                                    name="email"
                                     placeholder="seu.email@cesar.school"
                                     required
                                     className="pl-10 bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
@@ -45,13 +71,10 @@ export default function LoginForm({ step, handleSubmitEmail, handleSubmitCode, s
                             </div>
                         </div>
 
-                        <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center">
-                            Enviar Código
-                            <ArrowRight className="ml-2 h-5 w-5" />
-                        </Button>
-                    </form>
+                        <SendCodeBtn />
+                    </Form>
                 ) : (
-                    <form onSubmit={handleSubmitCode} className="space-y-6">
+                    <Form action={handleSubmitCode} className="space-y-6">
                         <div className="space-y-2">
                             <Label htmlFor="code" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Código de Acesso
@@ -65,15 +88,12 @@ export default function LoginForm({ step, handleSubmitEmail, handleSubmitCode, s
                             />
                         </div>
 
-                        <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center">
-                            Entrar
-                            <ArrowRight className="ml-2 h-5 w-5" />
-                        </Button>
+                        <LoginBtn />
 
                         <Button variant="link" onClick={() => setStep('email')} className="w-full text-orange-500">
                             Voltar para e-mail
                         </Button>
-                    </form>
+                    </Form>
                 )}
 
                 <div className="text-sm text-center">

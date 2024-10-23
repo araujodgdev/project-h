@@ -52,8 +52,9 @@ export const menuItems = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { isDarkMode, toggleDarkMode } = useThemeStore();
   const user = {
-    name: "John Doe",
-    email: "jdjd@cesar.school",
+    name: localStorage.getItem('name'),
+    email: localStorage.getItem('email'),
+    username: localStorage.getItem('username'),
     avatar: "/avatars/shadcn.jpg",
   }
   return (
@@ -97,12 +98,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
           <Avatar className="h-8 w-8 rounded-lg">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback className="rounded-lg dark:bg-orange-600">JD</AvatarFallback>
+            <AvatarImage src={user.avatar} alt='imagem do usuário' />
+            <AvatarFallback className="rounded-lg dark:bg-orange-600">{`${user.name?.split(' ')[0][0]}${user.name?.split(' ')[1][0]}`}</AvatarFallback>
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{user.name}</span>
-            <span className="truncate text-xs">{user.email}</span>
+            <span className="truncate text-xs">{user.username}</span>
           </div>
           <LogOut className="ml-auto size-4 relative left-16" />
         </div>

@@ -3,15 +3,18 @@ import { users, type InsertUser, type SelectUser } from "../db/schema";
 import type { IUserService } from "../interfaces/User.interface";
 import type { ServiceResponse } from "../types/ServiceResponse.type";
 import { eq } from "drizzle-orm";
+import { AuthService } from "./Auth.service";
 
 
 export class UserService implements IUserService {
     private db: PostgresJsDatabase;
     private usersTable: typeof users;
+    private authService: AuthService;
 
     public constructor(db: PostgresJsDatabase) {
         this.db = db;
         this.usersTable = users
+        this.authService = new AuthService();
     }
 
     public async insertUser(data: InsertUser): Promise<ServiceResponse<SelectUser | unknown>> {
@@ -44,6 +47,26 @@ export class UserService implements IUserService {
         } catch (error) {
             return {
                 data: error,
+                message: "INTERNAL_SERVER_ERROR"
+            }
+        }
+    }
+
+    public async selectUserByEmail(email: SelectUser['email']): Promise<ServiceResponse<SelectUser | unknown>> {
+        try {
+            const [foundUser] = await this.db.select().from(this.usersTable).where(eq(this.usersTable.email, email));
+            if (!foundUser) {
+                return {
+                    message: "NOT_FOUND"
+                }
+            }
+            return {
+                data: foundUser,
+                message: "OK"
+            }
+        } catch (e) {
+            return {
+                data: e,
                 message: "INTERNAL_SERVER_ERROR"
             }
         }

@@ -22,4 +22,8 @@ export default class UserRoute {
     public getUserById: FastifyPluginAsync = async (fastify: FastifyInstance) => {
         fastify.get('/user/:id', this.userController.getUserById.bind(this.userController));
     }
+
+    public getUserByEmail: FastifyPluginAsync = async (fastify: FastifyInstance) => {
+        fastify.post('/user/login', this.userController.getUserByEmail.bind(this.userController));
+    }
 }
