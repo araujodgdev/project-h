@@ -34,4 +34,19 @@ export class AuthService {
         }
     }
 
+    public async verifyCode(email: string, code: string): Promise<boolean> {
+        const redis = await RedisClient.getInstance();
+        const key = `login_code:${email}`;
+        const redisCode = await redis.get(key);
+
+        if (redisCode) {
+            const isValid = await Bun.password.verify(redisCode, code);
+            if (isValid) {
+                await redis.del(key);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

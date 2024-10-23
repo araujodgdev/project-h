@@ -10,5 +10,9 @@ export default class AuthRoute {
 
     public requestCode: FastifyPluginAsync = async (app: FastifyInstance) => {
         app.post('/auth/request-code', this.authController.requestCode.bind(this.authController));
-    } 
+    }
+
+    public verifyCode: FastifyPluginAsync = async (app: FastifyInstance) => {
+        app.post('/auth/verify-code', this.authController.verifyCode.bind(this.authController));
+    }
 }

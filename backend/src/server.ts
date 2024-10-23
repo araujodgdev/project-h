@@ -36,11 +36,13 @@ export default class Server {
         const userRoutes = new UserRoute();
         this.app.register(userRoutes.createUser, {prefix: '/api'})
         this.app.register(userRoutes.getUserById, {prefix: '/api'})
+        this.app.register(userRoutes.getUserByEmail, {prefix: '/api'})
     }
 
     public registerAuthRoutes() {
         const authRoutes = new AuthRoute();
         this.app.register(authRoutes.requestCode, {prefix: '/api'})
+        this.app.register(authRoutes.verifyCode, {prefix: '/api'})
 
     }
 }

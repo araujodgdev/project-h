@@ -8,7 +8,7 @@ import { useThemeStore } from "@/store/useThemeStore";
 import { useFormStatus } from "react-dom";
 import Form from 'next/form'
 
-function SubmitButton() {
+const SendCodeBtn = () => {
     const { pending } = useFormStatus();
     return (
         <Button type="submit" className="w-full bg-orange-500 aria-disabled:bg-gray-600 hover:bg-orange-600 text-white flex items-center justify-center" aria-disabled={pending} disabled={pending}>
@@ -18,8 +18,20 @@ function SubmitButton() {
     )
 }
 
+const LoginBtn = () => {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" className="w-full bg-orange-500 aria-disabled:bg-gray-600 hover:bg-orange-600 text-white flex items-center justify-center" aria-disabled={pending} disabled={pending}>
+            {pending ? 'Entrando' : 'Entrar'}
+            {pending ? <Ellipsis className="ml-2 h-5 w-5" /> : <ArrowRight className="ml-2 h-5 w-5" />}
+        </Button>
+    )
+}
+
+
+
 export default function LoginForm({ step, handleSubmitEmail, handleSubmitCode, setStep }: {
-    step: string, handleSubmitEmail: (formData: FormData) => void | Promise<void>, handleSubmitCode: (e: React.FormEvent) => void, setStep: Dispatch<SetStateAction<string>>
+    step: string, handleSubmitEmail: (formData: FormData) => void | Promise<void>, handleSubmitCode: (formData: FormData) => void | Promise<void>, setStep: Dispatch<SetStateAction<string>>
 }) {
     const isDarkMode = useThemeStore(state => state.isDarkMode);
     const toggleDarkMode = useThemeStore(state => state.toggleDarkMode);
@@ -59,10 +71,10 @@ export default function LoginForm({ step, handleSubmitEmail, handleSubmitCode, s
                             </div>
                         </div>
 
-                        <SubmitButton />
+                        <SendCodeBtn />
                     </Form>
                 ) : (
-                    <form onSubmit={handleSubmitCode} className="space-y-6">
+                    <Form action={handleSubmitCode} className="space-y-6">
                         <div className="space-y-2">
                             <Label htmlFor="code" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Código de Acesso
@@ -76,15 +88,12 @@ export default function LoginForm({ step, handleSubmitEmail, handleSubmitCode, s
                             />
                         </div>
 
-                        <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center">
-                            Entrar
-                            <ArrowRight className="ml-2 h-5 w-5" />
-                        </Button>
+                        <LoginBtn />
 
                         <Button variant="link" onClick={() => setStep('email')} className="w-full text-orange-500">
                             Voltar para e-mail
                         </Button>
-                    </form>
+                    </Form>
                 )}
 
                 <div className="text-sm text-center">

@@ -1,0 +1,16 @@
+services:
+  db:
+    image: bitnami/postgresql:latest
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=project-h
+    volumes:
+      - 'project-h-data:/bitnami/postgresql'
+    restart: always
+    
+
+volumes:
+  project-h-data: { }
