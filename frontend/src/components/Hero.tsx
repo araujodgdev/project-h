@@ -4,7 +4,7 @@ export default function Hero() {
             <div className="absolute inset-0 bg-[url('/placeholder.svg?height=800&width=1200')] opacity-10 bg-cover bg-center mix-blend-overlay"></div>
             <div className="absolute inset-0 bg-gradient-to-br from-transparent to-orange-600/50 dark:to-orange-800/50"></div>
             <div className="relative max-w-2xl text-center lg:text-left z-10">
-                <h1 className="text-4xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
                     Conecte-se ao <span className="text-orange-200">Project H</span>
                 </h1>
                 <p className="text-xl text-white opacity-90 mb-8">
