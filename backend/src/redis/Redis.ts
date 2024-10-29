@@ -17,11 +17,7 @@ export class RedisClient {
             RedisClient.isConnecting = true;
 
             RedisClient.instance = createClient({
-                password: 'u2KX3Ob1o2twJGytODGp3G91QEWPGcpr',
-                socket: {
-                    host: 'redis-15932.c336.samerica-east1-1.gce.redns.redis-cloud.com',
-                    port: 15932
-                }
+                url: process.env.KV_URL,
             });
 
             RedisClient.instance.on('error', (err) => console.error('Redis Client Error', err));

@@ -14,9 +14,25 @@ export default function Page() {
   const setUserEmail = useUserStore(state => state.setUserEmail);
   const setUsername = useUserStore(state => state.setUsername);
   const setUserFullName = useUserStore(state => state.setUserFullName);
+  const setUserId = useUserStore(state => state.setUserId);
   const userEmail = useUserStore(state => state.email);
   const [step, setStep] = useState('email')
   const router = useRouter();
+
+  const getUserIDFromDB = async (email: string) => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/user/email', {
+        data: {
+          email
+        }
+      })
+        const {id} = response.data;
+        return id;
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleSubmitEmail = async (formData: FormData): Promise<void> => {
     try {
@@ -38,6 +54,8 @@ export default function Page() {
         code: formData.get('code')
       })
       if (validCode) {
+        const id = await getUserIDFromDB(userEmail);
+        console.log(id);
         router.push('/home');
       }
     } catch (error) {
@@ -53,10 +71,11 @@ export default function Page() {
         username: formData.get('username')
       })
 
-      const {fullName, username} = response.data;
+      const {fullName, username, id} = response.data;
 
       setUsername(username);
       setUserFullName(fullName);
+      setUserId(id);
 
       await axios.post('http://localhost:8080/api/auth/request-code', {
         email: userEmail

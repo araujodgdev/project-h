@@ -35,11 +35,11 @@ export class UserController {
 
     public async getUserByEmail(req: FastifyRequest, reply: FastifyReply): Promise<any> {
         try {
-            const { email } = req.body as any;
+            const { email } = req.query as any;
             const {data, message} = await this.userService.selectUserByEmail(email);
 
             if (message === 'NOT_FOUND') {
-                return reply.code(mapHttpStatus(message)).send({ message: 'Usuário não encontrado!' })
+                return reply.code(mapHttpStatus(message)).send(email)
             }
 
             return reply.code(mapHttpStatus(message)).send(data)

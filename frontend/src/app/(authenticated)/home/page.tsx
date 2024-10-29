@@ -3,7 +3,22 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Post from "@/components/Post"
+import Form from "next/form"
+import axios from "axios"
+import { useUserStore } from "@/store/useUserStore"
 export default function FeedPage() {
+  const userId = useUserStore(state => state.id);
+
+  const handleSubmitNewPost = async (formData: FormData) => {
+    try {
+      await axios.post('http://localhost:8080/api/post', {
+        userId,
+        content: formData.get('content')
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
       <div className="flex flex-col items-center h-screen">
@@ -14,13 +29,16 @@ export default function FeedPage() {
               <AvatarImage src="/placeholder.svg?height=40&width=40" alt="@username" />
               <AvatarFallback className="dark:bg-orange-600">JD</AvatarFallback>
             </Avatar>
-            <div className="flex-1 space-y-4">
+            <Form action={handleSubmitNewPost} className="flex-1 space-y-4">
               <Input
                 placeholder="O que está acontecendo na universidade?"
+                name="content"
+                id="content"
+                type="text"
                 className="mb-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
               <Button className="bg-orange-500 hover:bg-orange-600 text-white">Postar</Button>
-            </div>
+            </Form>
           </div>
         </div>
 

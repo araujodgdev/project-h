@@ -52,12 +52,7 @@ export const menuItems = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { isDarkMode, toggleDarkMode } = useThemeStore();
-  const user = useUserStore(state => ({
-    name: state.fullName,
-    email: state.email,
-    username: state.username,
-    avatar: "/avatars/shadcn.jpg",
-  }));
+  const user = React.useMemo(() => useUserStore.getState(), [])
   return (
     <Sidebar collapsible="none" {...props} className="sticky top-0 bg-inherit w-[28rem] px-20 min-h-screen border-r dark:border-gray-800 dark:bg-gray-900">
       <SidebarHeader className="relative left-2"> 
@@ -100,10 +95,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
           <Avatar className="h-8 w-8 rounded-lg">
             <AvatarImage src={user.avatar} alt='imagem do usuário' />
-            <AvatarFallback className="rounded-lg dark:bg-orange-600">{`${user.name?.split(' ')[0][0]}${user.name?.split(' ')[1][0]}`}</AvatarFallback>
+            <AvatarFallback className="rounded-lg dark:bg-orange-600">{`${user.fullName?.split(' ')[0][0]}${user.fullName?.split(' ')[1][0]}`}</AvatarFallback>
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{user.name}</span>
+            <span className="truncate font-semibold">{user.fullName}</span>
             <span className="truncate text-xs">{user.username}</span>
           </div>
           <LogOut className="ml-auto size-4 relative left-16" />
