@@ -3,23 +3,20 @@ import { users, type InsertUser, type SelectUser } from "../db/schema";
 import type { IUserService } from "../interfaces/User.interface";
 import type { ServiceResponse } from "../types/ServiceResponse.type";
 import { eq } from "drizzle-orm";
-import { AuthService } from "./Auth.service";
 
 
 export class UserService implements IUserService {
     private db: PostgresJsDatabase;
     private usersTable: typeof users;
-    private authService: AuthService;
 
     public constructor(db: PostgresJsDatabase) {
         this.db = db;
         this.usersTable = users
-        this.authService = new AuthService();
     }
 
     public async insertUser(data: InsertUser): Promise<ServiceResponse<SelectUser | unknown>> {
         try {
-            const [ userCreated ] = await this.db.insert(this.usersTable).values(data).returning()
+            const [userCreated] = await this.db.insert(this.usersTable).values(data).returning()
             return {
                 data: userCreated,
                 message: "CREATED"
@@ -31,10 +28,10 @@ export class UserService implements IUserService {
             }
         }
     }
-    
+
     public async selectUserById(id: SelectUser['id']): Promise<ServiceResponse<SelectUser | unknown>> {
         try {
-            const [ user ] = await this.db.select().from(this.usersTable).where(eq(this.usersTable.id, id));
+            const [user] = await this.db.select().from(this.usersTable).where(eq(this.usersTable.id, id));
             if (!user) {
                 return {
                     message: "NOT_FOUND"

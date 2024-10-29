@@ -3,6 +3,10 @@ import UserRoute from "./routes/User.route";
 import AuthRoute from "./routes/Auth.route";
 import type fastifyCors from "@fastify/cors";
 import cors from '@fastify/cors'    
+import { db } from "./db";
+import PostService from "./services/Posts.service";
+import PostController from "./controllers/Post.controller";
+import PostRoute from "./routes/Post.route";
 
 export default class Server {
     private app: FastifyInstance
@@ -19,6 +23,7 @@ export default class Server {
         });
         this.registerUserRoutes()
         this.registerAuthRoutes()
+        this.registerPostRoutes()
     }
 
     public start(): void {
@@ -44,5 +49,12 @@ export default class Server {
         this.app.register(authRoutes.requestCode, {prefix: '/api'})
         this.app.register(authRoutes.verifyCode, {prefix: '/api'})
 
+    }
+
+    public registerPostRoutes() {
+        const postService = new PostService(db);
+        const postController = new PostController(postService);
+        const postRoutes = new PostRoute(postController);
+        this.app.register(postRoutes.createPost, {prefix: '/api'})
     }
 }
