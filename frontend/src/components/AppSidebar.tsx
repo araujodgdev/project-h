@@ -25,6 +25,7 @@ import { useThemeStore } from "@/store/useThemeStore"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import Link from "next/link"
 import { poppins } from "@/lib/fonts"
+import { useUserStore } from "@/store/useUserStore"
 
 export const menuItems = [
   {
@@ -51,12 +52,12 @@ export const menuItems = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { isDarkMode, toggleDarkMode } = useThemeStore();
-  const user = {
-    name: localStorage.getItem('name'),
-    email: localStorage.getItem('email'),
-    username: localStorage.getItem('username'),
+  const user = useUserStore(state => ({
+    name: state.fullName,
+    email: state.email,
+    username: state.username,
     avatar: "/avatars/shadcn.jpg",
-  }
+  }));
   return (
     <Sidebar collapsible="none" {...props} className="sticky top-0 bg-inherit w-[28rem] px-20 min-h-screen border-r dark:border-gray-800 dark:bg-gray-900">
       <SidebarHeader className="relative left-2"> 

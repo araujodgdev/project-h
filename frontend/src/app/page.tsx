@@ -7,15 +7,20 @@ import { useThemeStore } from "@/store/useThemeStore"
 import axios from 'axios';
 import { useRouter } from "next/navigation"
 import RegisterForm from "@/components/RegisterForm"
+import { useUserStore } from "@/store/useUserStore"
 
 export default function Page() {
   const isDarkMode = useThemeStore(state => state.isDarkMode);
+  const setUserEmail = useUserStore(state => state.setUserEmail);
+  const setUsername = useUserStore(state => state.setUsername);
+  const setUserFullName = useUserStore(state => state.setUserFullName);
+  const userEmail = useUserStore(state => state.email);
   const [step, setStep] = useState('email')
   const router = useRouter();
 
   const handleSubmitEmail = async (formData: FormData): Promise<void> => {
-    localStorage.setItem('email', formData.get('email') as string)
     try {
+      setUserEmail(formData.get('email') as string);
       await axios.post('http://localhost:8080/api/auth/request-code', {
         email: formData.get('email')
       })
@@ -29,7 +34,7 @@ export default function Page() {
   const handleSubmitCode = async (formData: FormData) => {
     try {
       const validCode = await axios.post('http://localhost:8080/api/auth/verify-code', {
-        email: localStorage.getItem('email'),
+        email: userEmail,
         code: formData.get('code')
       })
       if (validCode) {
@@ -44,17 +49,17 @@ export default function Page() {
     try {
       const response = await axios.post('http://localhost:8080/api/user', {
         fullName: formData.get('name'),
-        email: localStorage.getItem('email'),
+        email: userEmail,
         username: formData.get('username')
       })
 
       const {fullName, username} = response.data;
 
-      localStorage.setItem('username', username as string)
-      localStorage.setItem('name', fullName as string)
+      setUsername(username);
+      setUserFullName(fullName);
 
       await axios.post('http://localhost:8080/api/auth/request-code', {
-        email: localStorage.getItem('email')
+        email: userEmail
       });
 
       setStep('code')
