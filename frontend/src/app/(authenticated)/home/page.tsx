@@ -12,9 +12,9 @@ import { usePostStore } from "@/store/usePostStore"
 
 
 export default function FeedPage() {
-  const userFullName = JSON.parse(localStorage.getItem('user') || '{}').fullName;
+  const userFullName = typeof window !== "undefined" ? JSON.parse(localStorage.getItem('user') || '{}').fullName : '';
   const queryClient = useQueryClient();
-  const userId = JSON.parse(localStorage.getItem('user') || '{}').id;
+  const userId = typeof window !== "undefined" ? JSON.parse(localStorage.getItem('user') || '{}').id : '';
   const { posts, setPosts } = usePostStore();
 
   const handleSubmitNewPost = async (formData: FormData) => {
@@ -42,6 +42,7 @@ export default function FeedPage() {
   useEffect(() => {
     setPosts(data);
   }, [data, setPosts])
+
 
   return (
       <div className="flex flex-col items-center">
