@@ -5,19 +5,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Post, { PostProps } from "@/components/Post"
 import Form from "next/form"
 import axios from "axios"
-import { useUserStore } from "@/store/useUserStore"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useEffect } from "react"
+import { usePostStore } from "@/store/usePostStore"
+
 
 
 export default function FeedPage() {
-  const userFullName = useUserStore(state => state.fullName);
+  const userFullName = JSON.parse(localStorage.getItem('user') || '{}').fullName;
   const queryClient = useQueryClient();
-  const userId = useUserStore(state => state.id);
-  const {isPending, data} = useQuery({
-    queryKey: ['postsData'],
-    queryFn: () => fetch('http://localhost:8080/api/post').then(res => res.json()),
-    throwOnError: true,
-  }, queryClient);
+  const userId = JSON.parse(localStorage.getItem('user') || '{}').id;
+  const { posts, setPosts } = usePostStore();
+
   const handleSubmitNewPost = async (formData: FormData) => {
     try {
       await axios.post('http://localhost:8080/api/post', {
@@ -29,9 +28,23 @@ export default function FeedPage() {
     }
   }
 
-  
+  const {isPending, data} = useQuery({
+    queryKey: ['postsData'],
+    queryFn: async () => {
+      const response = await fetch('http://localhost:8080/api/post').then(res => res.json());
+      setPosts(response);
+      return response;
+    },
+    throwOnError: true,
+    staleTime: 500
+  }, queryClient);
+
+  useEffect(() => {
+    setPosts(data);
+  }, [data, setPosts])
+
   return (
-      <div className="flex flex-col items-center h-screen">
+      <div className="flex flex-col items-center">
         {/* Post Form */}
         <div className="py-4 px-20 border-b w-full border-gray-200 dark:border-gray-800">
           <div className="flex space-x-4">
@@ -55,7 +68,7 @@ export default function FeedPage() {
         {/* Feed */}
         <div className="divide-y divide-gray-200 dark:divide-gray-800 w-[800px]">
           {isPending ? <p>Carregando...</p> : (
-            data.map((post: PostProps) => <Post key={post.id} postProps={post} />)
+            posts.map((post: PostProps) => <Post key={post.id} postProps={post} />)
           )}
         </div>
       </div>

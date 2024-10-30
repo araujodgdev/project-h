@@ -22,21 +22,6 @@ export default function Page() {
   const [step, setStep] = useState('email')
   const router = useRouter();
 
-  // const getUserIDFromDB = async (email: string) => {
-  //   try {
-  //     const response = await axios.get('http://localhost:8080/api/user/email', {
-  //       data: {
-  //         email
-  //       }
-  //     })
-  //     const { id } = response.data;
-  //     return id;
-
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
   const handleSubmitEmail = async (formData: FormData): Promise<void> => {
     try {
       setUserEmail(formData.get('email') as string);
@@ -61,6 +46,7 @@ export default function Page() {
         setUserFullName(user.data.fullName);
         setUsername(user.data.username);
         setUserId(user.data.id);
+        localStorage.setItem('user', JSON.stringify(user.data));
         router.push('/home');
       }
     } catch (error) {
