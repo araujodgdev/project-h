@@ -1,4 +1,5 @@
 import {boolean, integer, pgTable, varchar, text, timestamp } from 'drizzle-orm/pg-core'
+import { relations } from 'drizzle-orm'
 
 export const users = pgTable('users', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -6,6 +7,8 @@ export const users = pgTable('users', {
     username: text().notNull(),
     email: varchar({ length: 255 }).notNull().unique(),
 })
+
+export const usersRelations = relations(users, ({many}) => ({posts: many(posts)}))
 
 export const posts = pgTable('posts', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -17,6 +20,8 @@ export const posts = pgTable('posts', {
     commentsCount: integer('comments_count').default(0),
     isDeleted: boolean('is_deleted').default(false),
 })
+
+export const postsRelations = relations(posts, ({one}) => ({user: one(users, {fields: [posts.userId], references: [users.id]})}))
 
 export type InsertUser = typeof users.$inferInsert
 export type SelectUser = typeof users.$inferSelect

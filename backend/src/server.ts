@@ -52,10 +52,11 @@ export default class Server {
     }
 
     public registerPostRoutes() {
-        const postService = new PostService(db);
+        const postService = new PostService();
         const postController = new PostController(postService);
         const postRoutes = new PostRoute(postController);
         this.app.register(postRoutes.createPost, {prefix: '/api'})
         this.app.register(postRoutes.deletePost, {prefix: '/api'})
+        this.app.register(postRoutes.getAllPosts, {prefix: '/api'})
     }
 }

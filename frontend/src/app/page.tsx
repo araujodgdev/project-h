@@ -8,6 +8,9 @@ import axios from 'axios';
 import { useRouter } from "next/navigation"
 import RegisterForm from "@/components/RegisterForm"
 import { useUserStore } from "@/store/useUserStore"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 export default function Page() {
   const isDarkMode = useThemeStore(state => state.isDarkMode);
@@ -19,20 +22,20 @@ export default function Page() {
   const [step, setStep] = useState('email')
   const router = useRouter();
 
-  const getUserIDFromDB = async (email: string) => {
-    try {
-      const response = await axios.get('http://localhost:8080/api/user/email', {
-        data: {
-          email
-        }
-      })
-        const {id} = response.data;
-        return id;
+  // const getUserIDFromDB = async (email: string) => {
+  //   try {
+  //     const response = await axios.get('http://localhost:8080/api/user/email', {
+  //       data: {
+  //         email
+  //       }
+  //     })
+  //     const { id } = response.data;
+  //     return id;
 
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   const handleSubmitEmail = async (formData: FormData): Promise<void> => {
     try {
@@ -54,8 +57,10 @@ export default function Page() {
         code: formData.get('code')
       })
       if (validCode) {
-        const id = await getUserIDFromDB(userEmail);
-        console.log(id);
+        const user = await axios.get(`http://localhost:8080/api/user/email?email=${userEmail}`);
+        setUserFullName(user.data.fullName);
+        setUsername(user.data.username);
+        setUserId(user.data.id);
         router.push('/home');
       }
     } catch (error) {
@@ -71,7 +76,7 @@ export default function Page() {
         username: formData.get('username')
       })
 
-      const {fullName, username, id} = response.data;
+      const { fullName, username, id } = response.data;
 
       setUsername(username);
       setUserFullName(fullName);
@@ -88,19 +93,21 @@ export default function Page() {
   }
 
   return (
-    <div className={`min-h-screen flex flex-col lg:flex-row ${isDarkMode ? 'dark' : ''}`}>
-      <Hero />
-      {step === 'register' ?
-        <RegisterForm
-          handleSubmitRegister={handleSubmitRegister}
-          setStep={setStep}
-        /> :
-        <LoginForm
-          handleSubmitCode={handleSubmitCode}
-          handleSubmitEmail={handleSubmitEmail}
-          setStep={setStep}
-          step={step}
-        />}
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className={`min-h-screen flex flex-col lg:flex-row ${isDarkMode ? 'dark' : ''}`}>
+        <Hero />
+        {step === 'register' ?
+          <RegisterForm
+            handleSubmitRegister={handleSubmitRegister}
+            setStep={setStep}
+          /> :
+          <LoginForm
+            handleSubmitCode={handleSubmitCode}
+            handleSubmitEmail={handleSubmitEmail}
+            setStep={setStep}
+            step={step}
+          />}
+      </div>
+    </QueryClientProvider>
   )
 }

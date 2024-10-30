@@ -15,4 +15,8 @@ export default class PostRoute {
     public deletePost: FastifyPluginAsync = async (fastify: FastifyInstance) => {
         fastify.delete('/post/:id', this.postController.deletePost.bind(this.postController));
     }
+
+    public getAllPosts: FastifyPluginAsync = async (fastify: FastifyInstance) => {
+        fastify.get('/post', this.postController.getAllPosts.bind(this.postController));
+    }
 }

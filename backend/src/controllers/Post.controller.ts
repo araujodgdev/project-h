@@ -32,4 +32,13 @@ export default class PostController {
         }
     }
 
+    public async getAllPosts(_req: FastifyRequest, reply: FastifyReply): Promise<any> {
+        try {
+            const { data, message } = await this.postService.getPosts();
+
+            return reply.code(mapHttpStatus(message)).send(data);
+        } catch (error: any) {
+            return reply.code(500).send(error);
+        }
+    }
 }
