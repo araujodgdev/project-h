@@ -21,4 +21,15 @@ export default class PostController {
         }
     }
 
+    public async deletePost(req: FastifyRequest, reply: FastifyReply): Promise<any> {
+        try {
+            const { id } = req.params as any;
+            const { data, message } = await this.postService.deletePost(Number(id));
+
+            return reply.code(mapHttpStatus(message)).send(data);
+        } catch (error) {
+            return reply.code(500).send({ message: "INTERNAL_SERVER_ERROR" });
+        }
+    }
+
 }

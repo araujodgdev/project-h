@@ -56,5 +56,6 @@ export default class Server {
         const postController = new PostController(postService);
         const postRoutes = new PostRoute(postController);
         this.app.register(postRoutes.createPost, {prefix: '/api'})
+        this.app.register(postRoutes.deletePost, {prefix: '/api'})
     }
 }
