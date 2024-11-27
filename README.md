@@ -98,25 +98,33 @@ cd seu-repositorio
 
 ## Diagrama de atividades
 
-Abaixo está o diagrama de atividades do projeto:
 
-![Diagrama de atividades](./project-h-uml.png)
+![Cadastro de usuários](./uml-1.png)
+
+
+![Visualização da Timeline](./uml-3.png)
+
+
+![Publicação e interação de novos tópicos de texto](./uml-2.png)
+
 
 ## Backlog
 
 ![Backlog](./backlog-project-h.jpg)
 
-## Contribuindo
+## Colaboradores
 
-1. Faça um fork do repositório.
-2. Crie uma nova branch com sua feature ou correção: `git checkout -b minha-feature`.
-3. Commit suas mudanças: `git commit -m 'Adicionei minha feature'`.
-4. Faça um push para a branch: `git push origin minha-feature`.
-5. Abra um Pull Request.
-
-## Licença
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](./LICENSE) para mais detalhes.
-
-## Contato
-Para mais informações ou dúvidas, entre em contato com o desenvolvedor principal através do e-mail: [seu-email@dominio.com](mailto:seu-email@dominio.com)
+[Douglas Araújo](https://github.com/araujodgdev)
+<br/>
+[Isabela Karla](https://github.com/isabelakarla)
+<br/>
+[Luis Facunde](https://github.com/LuisFacunde)
+<br/>
+[Dayanne Moraes](https://github.com/DayanneMoraes)
+<br/>
+[Lucas Alves](https://github.com/Lucas-Alves123)
+<br/>
+[Gabriel Farias](https://github.com/gabrielfariaxs)
+<br/>
+[Ewerton Monteiro](https://github.com/ewertonmonteiroo)
 
