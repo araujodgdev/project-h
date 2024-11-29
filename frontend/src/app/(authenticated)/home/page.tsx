@@ -5,18 +5,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Post, { PostProps } from "@/components/Post"
 import Form from "next/form"
 import axios from "axios"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { usePostStore } from "@/store/usePostStore"
 
-
-
 export default function FeedPage() {
   const userFullName = typeof window !== "undefined" ? JSON.parse(localStorage.getItem('user') || '{}').fullName : '';
-  const queryClient = useQueryClient();
   const userId = typeof window !== "undefined" ? JSON.parse(localStorage.getItem('user') || '{}').id : '';
   const { posts, setPosts } = usePostStore();
-
+  const queryClient = useQueryClient();
+ 
   const handleSubmitNewPost = async (formData: FormData) => {
     try {
       await axios.post('http://localhost:8080/api/post', {
@@ -28,6 +26,16 @@ export default function FeedPage() {
     }
   }
 
+  const mutation = useMutation({
+    mutationFn: handleSubmitNewPost,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['postsData']
+      })
+    }
+  });
+
+
   const {isPending, data} = useQuery({
     queryKey: ['postsData'],
     queryFn: async () => {
@@ -36,7 +44,7 @@ export default function FeedPage() {
       return response;
     },
     throwOnError: true,
-    staleTime: 500
+    staleTime: 1000,
   }, queryClient);
 
   useEffect(() => {
@@ -53,7 +61,7 @@ export default function FeedPage() {
               <AvatarImage src="/placeholder.svg?height=40&width=40" alt="@username" />
               <AvatarFallback className="dark:bg-orange-600">{userFullName.split(' ')[0][0]}{userFullName.split(' ')[1][0]}</AvatarFallback>
             </Avatar>
-            <Form action={handleSubmitNewPost} className="flex-1 space-y-4">
+            <Form action={mutation.mutate} className="flex-1 space-y-4">
               <Input
                 placeholder="O que está acontecendo na universidade?"
                 name="content"

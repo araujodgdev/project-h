@@ -16,9 +16,7 @@ export class RedisClient {
         if (!RedisClient.isConnecting) {
             RedisClient.isConnecting = true;
 
-            RedisClient.instance = createClient({
-                url: process.env.KV_URL,
-            });
+            RedisClient.instance = createClient();
 
             RedisClient.instance.on('error', (err) => console.error('Redis Client Error', err));
 

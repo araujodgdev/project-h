@@ -10,7 +10,20 @@ services:
     volumes:
       - 'project-h-data:/bitnami/postgresql'
     restart: always
-    
+  redis:
+    image: docker.io/bitnami/redis:7.4
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+      - REDIS_DATABASE=project-h
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
+
 
 volumes:
   project-h-data: { }
+
+  redis_data:
+    driver: local

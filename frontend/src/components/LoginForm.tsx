@@ -29,7 +29,6 @@ const LoginBtn = () => {
 }
 
 
-
 export default function LoginForm({ step, handleSubmitEmail, handleSubmitCode, setStep }: {
     step: string, handleSubmitEmail: (formData: FormData) => void | Promise<void>, handleSubmitCode: (formData: FormData) => void | Promise<void>, setStep: Dispatch<SetStateAction<string>>
 }) {

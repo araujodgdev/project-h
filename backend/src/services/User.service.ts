@@ -3,13 +3,14 @@ import { users, type InsertUser, type SelectUser } from "../db/schema";
 import type { IUserService } from "../interfaces/User.interface";
 import type { ServiceResponse } from "../types/ServiceResponse.type";
 import { eq } from "drizzle-orm";
+import * as schema from '../db/schema'
 
 
 export class UserService implements IUserService {
-    private db: PostgresJsDatabase;
+    private db: PostgresJsDatabase<typeof schema>;
     private usersTable: typeof users;
 
-    public constructor(db: PostgresJsDatabase) {
+    public constructor(db: PostgresJsDatabase<typeof schema>) {
         this.db = db;
         this.usersTable = users
     }
