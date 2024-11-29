@@ -1,18 +1,16 @@
-import {boolean, integer, pgTable, varchar, text, timestamp } from 'drizzle-orm/pg-core'
+import {boolean, integer, pgTable, varchar, text, timestamp, serial } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
 export const users = pgTable('users', {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    id: serial('id').primaryKey(),
     fullName: text('full_name').notNull(),
-    username: text().notNull(),
-    email: varchar({ length: 255 }).notNull().unique(),
+    username: text('username').notNull(),
+    email: varchar('email', { length: 255 }).notNull().unique(),
 })
 
-export const usersRelations = relations(users, ({many}) => ({posts: many(posts)}))
-
 export const posts = pgTable('posts', {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    userId: integer('user_id').notNull().references(() => users.id, {onDelete: 'cascade'}),
+    id: serial('id').primaryKey(),
+    userId: integer('user_id').notNull(),
     content: text('content').notNull(),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at'),
@@ -21,6 +19,7 @@ export const posts = pgTable('posts', {
     isDeleted: boolean('is_deleted').default(false),
 })
 
+export const usersRelations = relations(users, ({many}) => ({posts: many(posts)}))
 export const postsRelations = relations(posts, ({one}) => ({user: one(users, {fields: [posts.userId], references: [users.id]})}))
 
 export type InsertUser = typeof users.$inferInsert

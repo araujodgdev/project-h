@@ -29,6 +29,13 @@
       "when": 1729711256965,
       "tag": "0003_broad_black_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1732888062227,
+      "tag": "0004_omniscient_shocker",
+      "breakpoints": true
     }
   ]
 }

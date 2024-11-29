@@ -1,15 +1,12 @@
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { posts, type SelectPost } from "../db/schema";
 import type { ServiceResponse } from "../types/ServiceResponse.type";
-import { eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { db } from "../db";
 import * as schema from "../db/schema";
-import type postgres from "postgres";
 
 export default class PostService {
-    private db: PostgresJsDatabase<typeof schema> & {
-        $client: postgres.Sql;
-    }
+    private db: PostgresJsDatabase<typeof schema>
     private postsTable: typeof posts;
 
     public constructor() {
@@ -59,7 +56,8 @@ export default class PostService {
         try {
             const posts = await this.db.query.posts.findMany({with: {
                 user: true,
-            }})
+            }, orderBy: [desc(this.postsTable.id)]})
+            
             return {
                 data: posts,
                 message: "OK"
